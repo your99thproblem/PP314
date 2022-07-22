@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <title>RestApp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+</head>
+<body>
+
+<!--headbar-->
+<div>
+    <nav class="navbar navbar-expand-xl navbar-dark bg-dark">
+        <div class="container-fluid">
+            <div id="AuthUserEmail">
+            </div>
+            <div>
+                <a th:href="@{/logout}">Logout</a>
+            </div>
+
+        </div>
+    </nav>
+</div>
+<!--headbar-->
+<div class="row">
+
+    <div class="col-2">
+        <div class="ms-1">
+            <div class="nav flex-column nav-pills me-1" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a sec:authorize="hasRole('ROLE_ADMIN')" class="nav-link active" id="v-pills-home-tab"
+                   data-bs-toggle="pill"
+                   href="#adminPanelButton" role="tab"
+                   aria-controls="v-pills-home" aria-selected="true">Admin</a>
+                <a
+                        th:class="${#authorization.expression('hasRole(''ROLE_ADMIN'')')} ? 'nav-link' : 'nav-link active'"
+                        th:attr="aria-selected=${#authorization.expression('hasRole(''ROLE_ADMIN'')')} ? 'false' : 'true'"
+                        id="v-pills-profile-tab" data-bs-toggle="pill" href="#userPanelButton" role="tab"
+                        aria-controls="v-pills-profile">User's page</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-10">
+        <div class="me-3">
+            <div class="tab-content" id="v-pills-tabContent">
+                <div sec:authorize="hasRole('ROLE_ADMIN')" class="tab-pane fade show active" id="adminPanelButton"
+                     role="tabpanel"
+                     aria-labelledby="v-pills-home-tab">
+                    <h2>ADMIN PANEL</h2>
+                    <nav class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" href="#nav-home" role="tab"
+                           aria-controls="nav-home" aria-selected="true">Users table</a>
+                        <a class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" href="#nav-profile" role="tab"
+                           aria-controls="nav-profile" aria-selected="false">New user</a></nav>
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+                             aria-labelledby="nav-home-tab">
+
+                            <!--                    Таблица юзеров на админке-->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>All users</h3>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-sm">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Email</th>
+                                            <th scope="col">Roles</th>
+                                            <th scope="col">Edit</th>
+                                            <th scope="col">Delete</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="tableAllUsers">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!--            Форма создания нового юзера-->
+                        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+
+                        </div>
+
+                    </div>
+                </div>
+                <div th:class="${#authorization.expression('hasRole(''ROLE_ADMIN'')')} ? 'tab-pane fade' : 'tab-pane fade show active'"
+                     id="userPanelButton"
+                     role="tabpanel"
+                     aria-labelledby="v-pills-profile-tab">
+                    <h2>User Information Page</h2>
+                    <div class="card">
+                        <div class="card-header">
+                            <h6>About User</h6>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped ">
+                                <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Roles</th>
+                                </tr>
+                                </thead>
+                                <tbody id="userInformation">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    const userFetchService = {
+        head: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Referer': 'null'
+        },
+        getUserAuth: async () => (await fetch(`http://127.0.0.1:8080/api/userAuth`)).json(),
+        getAllUsers: async () => (await fetch(`http://127.0.0.1:8080/api/userList`)).json()
+    }
+
+    loadUserWithRoles();
+    getAllUsers();
+
+    // Getting information about authorized user
+    async function loadUserWithRoles() {
+        try {
+            const response = await userFetchService.getUserAuth();
+            let temp_header = "<span class=\"text-white\">" + response.username + " " + "</span>"
+
+                + "<span class=\"text-white\"> with Roles: </span>"
+                + "<span class=\"text-white\">" + getRolesWithoutPrefix(response) + "</span>";
+            document.getElementById("AuthUserEmail").innerHTML = temp_header;
+            console.log(response);
+            let infUser = '<tr id=' + response.user.id + '>';
+            infUser += '<td>' + response.user.id + '</td>';
+            infUser += '<td>' + response.user.name + '</td>';
+            infUser += '<td>' + response.user.email + '</td>';
+            infUser += '<td>' + getRolesWithoutPrefix(response) + '</td>';
+            console.log(infUser);
+            document.getElementById("userInformation").innerHTML = infUser;
+
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    // Getting string of user's roles
+    function getRolesWithoutPrefix(user) {
+        let strRoles = "";
+        user.user.userRoleList.forEach(role => {
+            strRoles += role.role.name.replace("ROLE_", "") + " ";
+        });
+        return strRoles;
+    }
+
+    async function getAllUsers() {
+        const response = await userFetchService.getAllUsers();
+        console.log(response)
+        // let rows = '';
+        // for (let i = 0; i < response.length i++) {
+        //     console.log(response[i]);
+        //     rows += createRows(response[i]);
+        // }
+        // console.log(rows);
+        // document.getElementById("tableAllUsers").innerHTML = rows;
+
+    }
+
+    //Creating rows in table with buttons
+    function createRows(user) {
+        let user_data = '<tr id=' + user.id + '>';
+        user_data += '<td>' + user.id + '</td>';
+        user_data += '<td>' + user.name + '</td>';
+        user_data += '<td>' + user.email + '</td>';
+        user_data += '<td>' + getRolesWithoutPrefix(user) + '</td>';
+        user_data += '<td>' + '<input id="btnEdit" value="Edit" type="button"' +
+            'class="btn-info btn edit-btn" data-toggle="modal" data-target="#editModal" ' +
+            'data-id="' + user.id + '">' + '</td>' +
+
+            '<td>' + '<input id="btnDelete" value="Delete" type="button" class="btn btn-danger del-btn" ' +
+            'data-toggle="modal" data-target="#deleteModal" data-id=" ' + user.id + ' ">' + '</td>';
+        user_data += '</tr>';
+        user_data += '</tr>';
+        console.log(user_data);
+        return user_data;
+    }
+
+</script>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+<script>
+    $(".nav li").on("click", function () {
+        $(".nav li").remove("active");
+        $(this).addClass("active");
+    });
+</script>
+
+<script>
+    $(".nav-link li").on("click", function () {
+        $(".nav-link li").remove("active");
+        $(this).addClass("active");
+    });
+</script>
+</body>
+</html>
