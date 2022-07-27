@@ -41,18 +41,18 @@ function refreshTable() {
     }
 }
 
-async function createNewUser() {
+function createNewUser() {
     let newUserForm = document.getElementById("newUserForm");
     let formData = new FormData(newUserForm);
     let user = {
         name: formData.get('name'),
         email: formData.get('email'),
         password: formData.get('password'),
-        //     roles: Array.from(document.getElementById("newRoles"))
-        //         .filter(option => option.selected)
-        //         .map(option => ({name: option.value, id: option.id}))
+            roles_id: Array.from(document.getElementById("newRoles"))
+                .filter(option => option.selected)
+                .map(option => option.id)
     }
-    await fetch('/api/createUser', {
+    fetch('/api/createUser', {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'

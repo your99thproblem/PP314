@@ -31,11 +31,11 @@ public class JsonParseServiceImpl implements JsonParseService {
             map.remove("roles_id");
         }
         user = mapper.convertValue(map, User.class);
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        for (int i = 0; i < arr.size(); i++) {
-//            arr.get(i);
-//            user.addRole(roleService.findRoleById(Long.valueOf(arr.get(i))));
-//        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        for (int i = 0; i < arr.size(); i++) {
+            arr.get(i);
+            user.addRole(roleService.findRoleById(Long.valueOf(arr.get(i))));
+        }
         return user;
     }
 }

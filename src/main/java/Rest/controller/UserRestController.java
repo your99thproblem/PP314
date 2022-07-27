@@ -45,6 +45,7 @@ public class UserRestController {
     @PostMapping("/createUser")
     public ResponseEntity<?> createUser(@RequestBody Map map) {
         userService.saveUser(jsonParseService.parseToUser(map));
+//        userService.saveUser(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
