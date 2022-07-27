@@ -20,11 +20,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @Email
+    @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}")
     @Column(unique = true)
-    @NotBlank(message = "Enter your email")
+    @NotBlank
     private String email;
-    @NotBlank(message = "Enter your password")
+    @NotBlank
     @Size(min = 2)
     private String password;
     @OneToMany(mappedBy = "user",
