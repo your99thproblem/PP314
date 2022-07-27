@@ -1,8 +1,10 @@
 package Rest.controller;
 
 import Rest.model.CustomUserDetails;
+import Rest.model.Role;
 import Rest.model.User;
 import Rest.service.JsonParseService;
+import Rest.service.RoleService;
 import Rest.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,10 +21,13 @@ public class UserRestController {
     private UserService userService;
     private JsonParseService jsonParseService;
 
+    private RoleService roleService;
+
     @Autowired
-    UserRestController(UserService userService, JsonParseService jsonParseService) {
+    UserRestController(UserService userService, JsonParseService jsonParseService, RoleService roleService) {
         this.userService = userService;
         this.jsonParseService = jsonParseService;
+        this.roleService = roleService;
     }
 
     @GetMapping("/userAuth")
@@ -39,11 +44,23 @@ public class UserRestController {
 
     @PostMapping("/createUser")
     public ResponseEntity<?> createUser(@RequestBody Map map) {
-        System.out.println("check");
-        User user = jsonParseService.parseToUser(map);
-        System.out.println(map);
-      userService.saveUser(user);
-        System.out.println("zdraste");
+        userService.saveUser(jsonParseService.parseToUser(map));
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/listRoles")
+    private List<Role> allRoles() {
+        return roleService.selectAllRoles();
+    }
+
+    @GetMapping("/getUser/{id}")
+    public User getUser(@PathVariable("id") Long id) {
+        return userService.findById(id);
+    }
+
+    @DeleteMapping("/deleteUser/{id}")
+    public ResponseEntity<User> DeleteModal(@PathVariable("id") Long id) {
+        userService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

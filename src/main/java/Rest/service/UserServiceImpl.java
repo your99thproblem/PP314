@@ -10,21 +10,13 @@ import javax.transaction.Transactional;
 import java.util.List;
 @Service
 public class UserServiceImpl implements UserService{
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+
     @Autowired
     private UserDao userDao;
 
     @Override
     public List<User> selectAllUsers() {
         return userDao.findAll();
-    }
-
-    @Override
-    @Transactional
-    public void saveUserWithRoleList(User user, String[] roles) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userDao.saveWithRoles(user, roles);
     }
 
     @Override
@@ -50,5 +42,10 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public void update(User user) {
         userDao.update(user);
+    }
+
+    @Override
+    public User findById(Long id) {
+        return userDao.findById(id);
     }
 }
