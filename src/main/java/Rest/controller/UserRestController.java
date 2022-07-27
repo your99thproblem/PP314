@@ -45,8 +45,7 @@ public class UserRestController {
     @PostMapping("/createUser")
     public ResponseEntity<?> createUser(@RequestBody Map map) {
         userService.saveUser(jsonParseService.parseToUser(map));
-//        userService.saveUser(user);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/listRoles")
@@ -64,5 +63,10 @@ public class UserRestController {
         userService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @PutMapping("/editUser")
+    public void updateUser(@RequestBody Map map) {
+        User user = jsonParseService.parseToUser(map);
+        userService.update(user);
 
+    }
 }

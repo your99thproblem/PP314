@@ -41,34 +41,6 @@ function refreshTable() {
     }
 }
 
-function createNewUser() {
-    let newUserForm = document.getElementById("newUserForm");
-    let formData = new FormData(newUserForm);
-    let user = {
-        name: formData.get('name'),
-        email: formData.get('email'),
-        password: formData.get('password'),
-            roles_id: Array.from(document.getElementById("newRoles"))
-                .filter(option => option.selected)
-                .map(option => option.id)
-    }
-    fetch('/api/createUser', {
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        method: 'POST',
-        body: JSON.stringify(user)
-    })
-        .then((r) => {
-            refreshTable();
-            showAllUsers();
-            $('#nav-usertable').tab('show');
-            //
-
-        })
-}
-
 function showAllUsers() {
     fetch('/api/userList')
         .then((response) => {
@@ -97,4 +69,120 @@ function showAllUsers() {
         });
 }
 
-showAllUsers();
+async function showEditModal(id) {
+    let editUser = await getUser(id);
+    console.log(editUser);
+    document.getElementById("editId").value = editUser.id;
+    document.getElementById("editName").value = editUser.name;
+    document.getElementById("editEmail").value = editUser.email;
+    $("#editRoles").empty();
+    let selectEdit = document.getElementById('editRoles');
+    let allRoles = await getAllRoles();
+    allRoles.forEach((roles_id) => {
+        let option = document.createElement('option');
+        option.setAttribute('value', roles_id.name);
+        option.setAttribute('id', roles_id.id);
+        option.appendChild(document.createTextNode(roles_id.name));
+        selectEdit.appendChild(option);
+    })
+    let userRoles = [];
+    let i = 0;
+    editUser.userRoleList.forEach((role) => userRoles[i++] = role);
+    let optionToSelect;
+    for (let i = 0; i < selectEdit.options.length; i++) {
+        optionToSelect = selectEdit.options[i];
+        userRoles.forEach((ur) => {
+            if (optionToSelect.text == ur) {
+                optionToSelect.selected = true;
+            }
+        });
+    }
+}
+
+
+function editUser() {
+    let editForm = document.getElementById("editForm");
+    let formData = new FormData(editForm);
+    let user = {
+        id: formData.get('id'),
+        name: formData.get('name'),
+        email: formData.get('email'),
+        password: formData.get('password'),
+        roles_id: Array.from(document.getElementById("editRoles"))
+            .filter(option => option.selected)
+            .map(option => option.id)
+    }
+    fetch('/api/editUser', {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        method: 'PUT',
+        body: JSON.stringify(user)
+    })
+        .then((r) => {
+            document.getElementById('editForm').onsubmit;
+        })
+
+}
+
+async function showDeleteModal(id) {
+    let deleteUser = await getUser(id);
+    console.log(deleteUser);
+    document.getElementById("deleteId").value = deleteUser.id;
+    document.getElementById("deleteName").value = deleteUser.name;
+    document.getElementById("deleteEmail").value = deleteUser.email;
+    $("#deleteRoles").empty();
+    let selectDel = document.getElementById('deleteRoles');
+    let allRoles = await getAllRoles();
+
+    allRoles.forEach((roles_id) => {
+        let option = document.createElement('option');
+        option.setAttribute('value', roles_id.name);
+        option.setAttribute('id', roles_id.id);
+        option.appendChild(document.createTextNode(roles_id.name));
+        selectDel.appendChild(option);
+    })
+    let userRoles = [];
+    let i = 0;
+    deleteUser.userRoleList.forEach((role) => userRoles[i++] = role);
+    let optionToSelect;
+    for (let i = 0; i < selectDel.options.length; i++) {
+        optionToSelect = selectDel.options[i];
+        userRoles.forEach((ur) => {
+            if (optionToSelect.text == ur) {
+                optionToSelect.selected = true;
+            }
+        });
+    }
+}
+
+async function deleteUser() {
+    let deleteUserID = document.getElementById('deleteId').value;
+    fetch('/api/deleteUser/' + deleteUserID, {
+        method: 'DELETE',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+        .then((response) => {
+
+        })
+        .then((r) => {
+            $('#UsersTable').tab('show');
+
+        })
+}
+
+async function getUser(id) {
+    let response = await fetch('/api/getUser/' + id);
+    console.log(response);
+    return await response.json();
+}
+
+function showAllUsersWithDelay() {
+    setTimeout(showAllUsers, 250);
+}
+
+showAllUsersWithDelay();
