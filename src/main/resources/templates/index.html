@@ -128,7 +128,8 @@
                                                             Close
                                                         </button>
                                                         <button type="submit" class="btn btn-primary"
-                                                        onclick="editUser()">Edit</button>
+                                                                onclick="editUser()">Edit
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -201,89 +202,86 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <!--                        Модалка DELETE-->
+                <!--                        Модалка DELETE-->
 
-            <!--            Форма создания нового юзера-->
-            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                <div class="border bg-light">
-                    <h5 class="p-2">New User</h5>
-                </div>
-                <div class="p-4 bg-white">
-                    <div class="bg-white d-flex justify-content-center text-center font-weight-bold">
-                        <form id="newUserForm">
-                            <div class="form-group">
-                                <label for="newName">Name</label>
-                                <input type="text" class="form-control" name="name"
-                                       id="newName" placeholder="Name">
-                            </div>
-                            <div class="form-group was-validated">
-                                <label for="newEmail" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="newEmail"
-                                       name="email"
-                                       placeholder="name@example.com" required>
-                            </div>
-                            <div class="form-group text-center was-validated">
-                                <label for="newPassword">Password</label>
-                                <input type="password" class="form-control is-invalid"
-                                       id="newPassword" name="password" placeholder="Password" required>
-                            </div>
-                            <div class="form-group text-center">
-                                <label for="newRoles">Role</label>
-                                <select multiple class="form-control"
-                                        id="newRoles" name="roles_id" value="roles_id">
-                                </select>
-                            </div>
-                            <div class="col text-center">
-                                <button type="submit" data-toggle="tab"
-                                        class="btn btn-success">
-                                    <!-- data-toggle="tab"-->
-                                    Add user
-                                </button>
-                            </div>
-                        </form>
+                <!--            Форма создания нового юзера-->
+                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                    <div class="border bg-light">
+                        <h5 class="p-2">New User</h5>
+                    </div>
+                    <div class="p-4 bg-white">
+                        <div class="bg-white d-flex justify-content-center text-center font-weight-bold">
+                            <form id="newUserForm">
+                                <div class="form-group">
+                                    <label for="newName">Name</label>
+                                    <input type="text" class="form-control" name="name"
+                                           id="newName" placeholder="Name">
+                                </div>
+                                <div class="form-group was-validated">
+                                    <label for="newEmail" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="newEmail"
+                                           name="email"
+                                           placeholder="name@example.com" required>
+                                </div>
+                                <div class="form-group text-center was-validated">
+                                    <label for="newPassword">Password</label>
+                                    <input type="password" class="form-control is-invalid"
+                                           id="newPassword" name="password" placeholder="Password" required>
+                                </div>
+                                <div class="form-group text-center">
+                                    <label for="newRoles">Role</label>
+                                    <select multiple class="form-control"
+                                            id="newRoles" name="roles_id" value="roles_id">
+                                    </select>
+                                </div>
+                                <div class="col text-center">
+                                    <button type="submit" data-toggle="tab"
+                                            class="btn btn-success">
+                                        <!-- data-toggle="tab"-->
+                                        Add user
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!--            Форма создания нового юзера-->
+            <!--            Форма создания нового юзера-->
 
-    </div>
 
-    <!--                Информация о юзере-->
-    <div th:class="${#authorization.expression('hasRole(''ROLE_ADMIN'')')} ? 'tab-pane fade' : 'tab-pane fade show active'"
-         id="userPanelButton"
-         role="tabpanel"
-         aria-labelledby="v-pills-profile-tab">
-        <h2>User Information Page</h2>
-        <div class="card">
-            <div class="card-header">
-                <h6>About User</h6>
+            <!--                Информация о юзере-->
+            <div th:class="${#authorization.expression('hasRole(''ROLE_ADMIN'')')} ? 'tab-pane fade' : 'tab-pane fade show active'"
+                 id="userPanelButton"
+                 role="tabpanel"
+                 aria-labelledby="v-pills-profile-tab">
+                <h2>User Information Page</h2>
+                <div class="card">
+                    <div class="card-header">
+                        <h6>About User</h6>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped ">
+                            <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Roles</th>
+                            </tr>
+                            </thead>
+                            <tbody id="userInformation">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
-            <div class="card-body">
-                <table class="table table-striped ">
-                    <thead>
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Roles</th>
-                    </tr>
-                    </thead>
-                    <tbody id="userInformation">
-
-                    </tbody>
-                </table>
-            </div>
         </div>
-
-
     </div>
 </div>
+
 <!--                Информация о юзере-->
-</div>
-</div>
-</div>
 
 
 <script src="/AuthInfo.js"></script>
