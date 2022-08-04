@@ -1,16 +1,12 @@
 async function getUsers() {
-    // отправляет запрос и получаем ответ
     const response = await fetch("/api/userList", {
         method: "GET",
         headers: {"Accept": "application/json"}
     });
-    // если запрос прошел нормально
     if (response.ok === true) {
-        // получаем данные
         const users = await response.json();
         let rows = document.getElementById("tableUsers");
         users.forEach(user => {
-            // добавляем полученные элементы в таблицу
             rows.append(row(user));
         });
     }
@@ -139,18 +135,6 @@ async function showEditModal(id) {
         option.appendChild(document.createTextNode(roles_id.name));
         selectEdit.appendChild(option);
     })
-    let userRoles = [];
-    let i = 0;
-    editUser.userRoleList.forEach((role) => userRoles[i++] = role);
-    let optionToSelect;
-    for (let i = 0; i < selectEdit.options.length; i++) {
-        optionToSelect = selectEdit.options[i];
-        userRoles.forEach((ur) => {
-            if (optionToSelect.text == ur) {
-                optionToSelect.selected = true;
-            }
-        });
-    }
 }
 
 //Редактирование по нажатию: сбор формы для отправки
@@ -204,25 +188,25 @@ async function showDeleteModal(id) {
     let selectDel = document.getElementById('deleteRoles');
     let allRoles = await getAllRoles();
 
-    allRoles.forEach((roles_id) => {
+    deleteUser.userRoleList.forEach((role) => {
         let option = document.createElement('option');
-        option.setAttribute('value', roles_id.name);
-        option.setAttribute('id', roles_id.id);
-        option.appendChild(document.createTextNode(roles_id.name));
+        option.setAttribute('value', role.role.name);
+        option.setAttribute('id', role.role.id);
+        option.appendChild(document.createTextNode(role.role.name));
         selectDel.appendChild(option);
     })
-    let userRoles = [];
-    let i = 0;
-    deleteUser.userRoleList.forEach((role) => userRoles[i++] = role);
-    let optionToSelect;
-    for (let i = 0; i < selectDel.options.length; i++) {
-        optionToSelect = selectDel.options[i];
-        userRoles.forEach((ur) => {
-            if (optionToSelect.text == ur) {
-                optionToSelect.selected = true;
-            }
-        });
-    }
+   //  let userRoles = [];
+   //  let i = 0;
+   //  deleteUser.userRoleList.forEach((role) => userRoles[i++] = role);
+   //  let optionToSelect;
+   //  for (let i = 0; i < selectDel.options.length; i++) {
+   //      optionToSelect = selectDel.options[i];
+   //      userRoles.forEach((ur) => {
+   //          if (optionToSelect.text == ur) {
+   //              optionToSelect.selected = true;
+   //          }
+   //      });
+   // }
 }
 
 document.forms["deleteForm"].addEventListener("submit", e => {
