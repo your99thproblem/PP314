@@ -82,200 +82,84 @@
                                     </table>
                                 </div>
 
-                                <!--MODAL EDIT-->
-                                <div class="modal fade" id="editModal" tabindex="-1"
-                                     aria-labelledby="editModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Edit user</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                            </div>
-                                            <form id="editForm">
-                                                <div class="modal-body">
-                                                    <div class="form-group">
-                                                        <label for="editId">ID</label>
-                                                        <input type="text" readonly class="form-control" id="editId"
-                                                               name="id" value="id"/>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="editName">Name</label>
-                                                        <input type="text" class="form-control" id="editName"
-                                                               name="name" value="name"/>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="editEmail">Email</label>
-                                                        <input type="email" class="form-control" id="editEmail"
-                                                               name="email" value="email" required/>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="editPassword">Password</label>
-                                                        <input type="password" class="form-control"
-                                                               id="editPassword"
-                                                               name="password" value="password" required/>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="editRoles">Role</label>
-                                                        <select multiple class="form-control"
-                                                                id="editRoles" name="roles" value="roles">
-                                                        </select>
-                                                    </div>
 
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">
-                                                            Close
-                                                        </button>
-                                                        <button type="submit" class="btn btn-primary">Edit
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </form>
+                            </div>
+                        </div>
+
+
+                        <!--            Форма создания нового юзера-->
+                        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                            <div class="border bg-light">
+                                <h5 class="p-2">New User</h5>
+                            </div>
+                            <div class="p-4 bg-white">
+                                <div class="bg-white d-flex justify-content-center text-center font-weight-bold">
+                                    <form id="newUserForm">
+                                        <div class="form-group">
+                                            <label for="newName">Name</label>
+                                            <input type="text" class="form-control" name="name"
+                                                   id="newName" placeholder="Name">
                                         </div>
-                                    </div>
-
-
+                                        <div class="form-group was-validated">
+                                            <label for="newEmail" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="newEmail"
+                                                   name="email"
+                                                   placeholder="name@example.com" required>
+                                        </div>
+                                        <div class="form-group text-center was-validated">
+                                            <label for="newPassword">Password</label>
+                                            <input type="password" class="form-control is-invalid"
+                                                   id="newPassword" name="password" placeholder="Password" required>
+                                        </div>
+                                        <div class="form-group text-center">
+                                            <label for="newRoles">Role</label>
+                                            <select multiple class="form-control"
+                                                    id="newRoles" name="roles_id" value="roles_id">
+                                            </select>
+                                        </div>
+                                        <div class="col text-center">
+                                            <button type="submit" data-toggle="tab"
+                                                    class="btn btn-success">
+                                                <!-- data-toggle="tab"-->
+                                                Add user
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
+                        <!--            Форма создания нового юзера-->
+
                     </div>
+                </div>
 
+                <!--                Информация о юзере-->
+                <div th:class="${#authorization.expression('hasRole(''ROLE_ADMIN'')')} ? 'tab-pane fade' : 'tab-pane fade show active'"
+                     id="userPanelButton"
+                     role="tabpanel"
+                     aria-labelledby="v-pills-profile-tab">
+                    <h2>User Information Page</h2>
+                    <div class="card">
+                        <div class="card-header">
+                            <h6>About User</h6>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped ">
+                                <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Roles</th>
+                                </tr>
+                                </thead>
+                                <tbody id="userInformation">
 
-                    <!--                        Модалка DELETE-->
-                    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
-                         aria-labelledby="ModalDeleteLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content font-weight-bold">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="deleteModalLabel">Delete user</h5>
-                                    <button type="button" class="close" data-bdismiss="modal"
-                                            aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form id="deleteForm">
-                                    <div class="row justify-content-center">
-                                        <div class="col-6 fw-bolder">
-                                            <div class="modal-body text-center">
-
-                                                <div class="form-group">
-                                                    <label for="deleteId">ID</label>
-                                                    <input type="text" disabled class="form-control"
-                                                           id="deleteId"
-                                                           value="id" name="id">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="deleteName">Name</label>
-                                                    <input type="text" disabled class="form-control"
-                                                           id="deleteName"
-                                                           value="name" name="name"/>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="deleteEmail">Email</label>
-                                                    <input type="text" disabled class="form-control"
-                                                           id="deleteEmail"
-                                                           value="email" name="email"/>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="deleteRoles">Role</label>
-                                                    <select multiple class="form-control"
-                                                            id="deleteRoles" name="roles" value="roles"
-                                                            readonly="true">
-                                                    </select>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">
-                                                        Close
-                                                    </button>
-                                                    <button type="submit" class="btn btn-danger"
-                                                    >Delete
-                                                    </button>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-                <!--                        Модалка DELETE-->
-
-                <!--            Форма создания нового юзера-->
-                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                    <div class="border bg-light">
-                        <h5 class="p-2">New User</h5>
-                    </div>
-                    <div class="p-4 bg-white">
-                        <div class="bg-white d-flex justify-content-center text-center font-weight-bold">
-                            <form id="newUserForm">
-                                <div class="form-group">
-                                    <label for="newName">Name</label>
-                                    <input type="text" class="form-control" name="name"
-                                           id="newName" placeholder="Name">
-                                </div>
-                                <div class="form-group was-validated">
-                                    <label for="newEmail" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="newEmail"
-                                           name="email"
-                                           placeholder="name@example.com" required>
-                                </div>
-                                <div class="form-group text-center was-validated">
-                                    <label for="newPassword">Password</label>
-                                    <input type="password" class="form-control is-invalid"
-                                           id="newPassword" name="password" placeholder="Password" required>
-                                </div>
-                                <div class="form-group text-center">
-                                    <label for="newRoles">Role</label>
-                                    <select multiple class="form-control"
-                                            id="newRoles" name="roles_id" value="roles_id">
-                                    </select>
-                                </div>
-                                <div class="col text-center">
-                                    <button type="submit" data-toggle="tab"
-                                            class="btn btn-success">
-                                        <!-- data-toggle="tab"-->
-                                        Add user
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--            Форма создания нового юзера-->
-
-
-            <!--                Информация о юзере-->
-            <div th:class="${#authorization.expression('hasRole(''ROLE_ADMIN'')')} ? 'tab-pane fade' : 'tab-pane fade show active'"
-                 id="userPanelButton"
-                 role="tabpanel"
-                 aria-labelledby="v-pills-profile-tab">
-                <h2>User Information Page</h2>
-                <div class="card">
-                    <div class="card-header">
-                        <h6>About User</h6>
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-striped ">
-                            <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Email</th>
-                                <th scope="col">Roles</th>
-                            </tr>
-                            </thead>
-                            <tbody id="userInformation">
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
@@ -284,7 +168,123 @@
 <!--                Информация о юзере-->
 
 
+<!--MODAL EDIT-->
+<div class="modal fade" id="editModal" tabindex="-1"
+     aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit user</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <form id="editForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="editId">ID</label>
+                        <input type="text" readonly class="form-control" id="editId"
+                               name="id" value="id"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editName">Name</label>
+                        <input type="text" class="form-control" id="editName"
+                               name="name" value="name"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editEmail">Email</label>
+                        <input type="email" class="form-control" id="editEmail"
+                               name="email" value="email" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPassword">Password</label>
+                        <input type="password" class="form-control"
+                               id="editPassword"
+                               name="password" value="password" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editRoles">Role</label>
+                        <select multiple class="form-control"
+                                id="editRoles" name="roles" value="roles">
+                        </select>
+                    </div>
 
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">
+                            Close
+                        </button>
+                        <button type="submit" class="btn btn-primary">Edit
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+</div>
+<!--MODAL EDIT-->
+
+<!--                        Модалка DELETE-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
+     aria-labelledby="ModalDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content font-weight-bold">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete user</h5>
+                <button type="button" class="close" data-bdismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="deleteForm">
+                <div class="row justify-content-center">
+                    <div class="col-6 fw-bolder">
+                        <div class="modal-body text-center">
+
+                            <div class="form-group">
+                                <label for="deleteId">ID</label>
+                                <input type="text" disabled class="form-control"
+                                       id="deleteId"
+                                       value="id" name="id">
+                            </div>
+                            <div class="form-group">
+                                <label for="deleteName">Name</label>
+                                <input type="text" disabled class="form-control"
+                                       id="deleteName"
+                                       value="name" name="name"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="deleteEmail">Email</label>
+                                <input type="text" disabled class="form-control"
+                                       id="deleteEmail"
+                                       value="email" name="email"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="deleteRoles">Role</label>
+                                <select multiple class="form-control"
+                                        id="deleteRoles" name="roles" value="roles"
+                                        readonly="true">
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">
+                                    Close
+                                </button>
+                                <button type="submit" class="btn btn-danger"
+                                >Delete
+                                </button>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--                        Модалка DELETE-->
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
