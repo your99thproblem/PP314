@@ -1,3 +1,4 @@
+// Request to upload users and create table
 async function getUsers() {
     const response = await fetch("/api/userList", {
         method: "GET",
@@ -12,6 +13,7 @@ async function getUsers() {
     }
 }
 
+// Creating rows with buttons in table
 function row(user) {
 
     const tr = document.createElement("tr");
@@ -84,9 +86,10 @@ async function getUser(id) {
         headers: {"Accept": "application/json"}
     });
     if (response.ok === true) {
-        return  await response.json();
+        return await response.json();
     }
 }
+
 function getAllRoles() {
     return fetch("/api/listRoles")
         .then((response) => {
@@ -119,7 +122,8 @@ async function showNewRoles() {
         }
     }
 }
-//Форма модалки для редактирования
+
+//Modal Form for User's Edit
 async function showEditModal(id) {
     let editUser = await getUser(id);
     document.getElementById("editId").value = editUser.id;
@@ -137,7 +141,7 @@ async function showEditModal(id) {
     })
 }
 
-//Редактирование по нажатию: сбор формы для отправки
+//Waiting for submit to edit user
 document.forms["editForm"].addEventListener("submit", e => {
     e.preventDefault();
     let editForm = document.getElementById("editForm");
@@ -155,7 +159,7 @@ document.forms["editForm"].addEventListener("submit", e => {
 })
 
 
-//Метод отправки редактирования пользователя и его отрисовки в таблице
+//Request to edit user and update row in table
 async function editUser(user) {
     const response = await fetch('/api/editUser', {
         headers: {
@@ -195,18 +199,6 @@ async function showDeleteModal(id) {
         option.appendChild(document.createTextNode(role.role.name));
         selectDel.appendChild(option);
     })
-   //  let userRoles = [];
-   //  let i = 0;
-   //  deleteUser.userRoleList.forEach((role) => userRoles[i++] = role);
-   //  let optionToSelect;
-   //  for (let i = 0; i < selectDel.options.length; i++) {
-   //      optionToSelect = selectDel.options[i];
-   //      userRoles.forEach((ur) => {
-   //          if (optionToSelect.text == ur) {
-   //              optionToSelect.selected = true;
-   //          }
-   //      });
-   // }
 }
 
 document.forms["deleteForm"].addEventListener("submit", e => {
@@ -230,7 +222,7 @@ async function deleteUser(id) {
     if (response.ok === true) {
         const form = document.forms["deleteForm"];
         form.reset();
-        document.querySelector("tr[data-rowid='" + id + "']").remove();        let editModal = document.getElementById("deleteModal");
+        document.querySelector("tr[data-rowid='" + id + "']").remove();
         let deleteModal = document.getElementById("deleteModal");
         let modal = bootstrap.Modal.getInstance(deleteModal);
         modal.hide();
@@ -238,8 +230,7 @@ async function deleteUser(id) {
 }
 
 
-
-// Создание нового пользователя
+// Creating new user
 document.forms["newUserForm"].addEventListener("submit", e => {
     e.preventDefault();
     let formData = new FormData(newUserForm);
@@ -255,7 +246,7 @@ document.forms["newUserForm"].addEventListener("submit", e => {
 })
 
 
-// Метод для создания нового пользователя
+// Request to create user
 async function createUser(user) {
 
     const response = await fetch('/api/createUser', {
@@ -275,12 +266,12 @@ async function createUser(user) {
         document.getElementById("tableUsers").append(row(user));
         document.getElementById("UsersTable").setAttribute("class", "nav-link active");
         document.getElementById("nav-profile-tab").setAttribute("class", "nav-link");
-       document.getElementById("nav-usertable").setAttribute("class", "tab-pane fade show active");
+        document.getElementById("nav-usertable").setAttribute("class", "tab-pane fade show active");
         document.getElementById("nav-profile").setAttribute("class", "tab-pane fade");
 
     }
 }
 
 
-// загрузка пользователей
+// Download users
 getUsers();
