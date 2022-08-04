@@ -9,6 +9,7 @@ newUserForm.addEventListener('submit', async (a) => {
             .filter(option => option.selected)
             .map(option => option.id)
     }
+
     try {
         const response = await fetch('/api/createUser', {
             headers: {

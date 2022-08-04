@@ -31,20 +31,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .httpBasic()
-                .and()
-                .cors()
-                .and()
                 .csrf().disable()
-//                .authorizeRequests()
-//                .anyRequest().permitAll();
                 .authorizeRequests()
                 .antMatchers("/api/**").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/login").permitAll()
-//                .anyRequest().authenticated()
                 .and()
                 .formLogin()
-//                .disable();
                 .successHandler(successUserHandler)
                 .permitAll()
                 .and()

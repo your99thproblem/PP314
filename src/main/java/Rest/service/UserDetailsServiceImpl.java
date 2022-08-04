@@ -41,8 +41,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
             }
         }
-    public static boolean hasAdminRole (CustomUserDetails user) {
-        return user.getAuthorities().stream()
-                .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
-    }
 }

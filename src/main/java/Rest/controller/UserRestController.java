@@ -9,6 +9,7 @@ import Rest.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,8 +45,9 @@ public class UserRestController {
 
     @PostMapping("/createUser")
     public ResponseEntity<?> createUser(@RequestBody Map map) {
-        userService.saveUser(jsonParseService.parseToUser(map));
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        User user = jsonParseService.parseToUser(map);
+        userService.saveUser(user);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     @GetMapping("/listRoles")
@@ -59,14 +61,15 @@ public class UserRestController {
     }
 
     @DeleteMapping("/deleteUser/{id}")
-    public ResponseEntity<User> DeleteModal(@PathVariable("id") Long id) {
+    public ResponseEntity<User> deleteUser(@PathVariable("id") Long id) {
         userService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @PutMapping("/editUser")
-    public void updateUser(@RequestBody Map map) {
+    public ResponseEntity<User> updateUser(@RequestBody Map map) {
         User user = jsonParseService.parseToUser(map);
         userService.update(user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
 
     }
 }
