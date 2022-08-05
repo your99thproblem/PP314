@@ -32,7 +32,6 @@ public class UserRestController {
     }
 
     @GetMapping("/userAuth")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<CustomUserDetails> getUserAuthority() {
         CustomUserDetails authorizedUser = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return new ResponseEntity<>(authorizedUser, HttpStatus.OK);
